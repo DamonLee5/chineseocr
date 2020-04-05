@@ -5,7 +5,8 @@ Created on Sun Aug  4 01:01:37 2019
 keras ocr model
 @author: chineseocr
 """
-from keras.layers import (Conv2D,BatchNormalization,MaxPool2D,Input,Permute,Reshape,Dense,LeakyReLU,Activation, Bidirectional, LSTM, TimeDistributed)
+from keras.layers import (Conv2D,BatchNormalization,MaxPool2D,Input,Permute,Reshape,Dense,LeakyReLU,Activation, Bidirectional, LSTM, TimeDistributed,Lambda)
+import keras.backend as K
 from keras.models import Model
 from keras.layers import ZeroPadding2D
 from keras.activations import relu
@@ -75,8 +76,8 @@ def keras_crnn(imgH, nc, nclass, nh, leakyRelu=False,lstmFlag=True):
     x = convRelu(6, batchNormalization=True,x=x)  
     
     x = Permute((3, 2, 1))(x)
-    
-    x = Reshape((-1,512))(x)
+    x = Lambda(lambda x:K.squeeze(x,axis=2))(x)
+    #x = Reshape((-1,512))(x)
 
     out = None
     if lstmFlag:
